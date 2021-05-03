@@ -14,9 +14,11 @@ User.create(
   password_confirmation: 'foobar'
 )
 
-Engineer.create(
-  name: 'Mexican Site',
-  description: 'Burritos nad mexican food',
-  location: 'Ontario',
-  avatar_link: 'https://robohash.org/sitsequiquia.png?size=300x300&set=set1'
-)
+10.times do
+  Restaurant.create(
+    name: Faker::Restaurant.unique.name,
+    description: Faker::Restaurant.unique.type,
+    location: Faker::Address.unique.street_address,
+    avatar_link: Faker::Avatar.image
+  )
+end
