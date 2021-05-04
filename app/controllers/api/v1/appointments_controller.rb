@@ -16,7 +16,7 @@ class Api::V1::AppointmentsController < ApplicationController
   private
 
   def appointment_params
-    params.permit(:user_id, :engineer_id, :date, :duration, :status)
+    params.permit(:user_id, :restaurant_id, :date, :duration, :status)
   end
 
   def error_message
