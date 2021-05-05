@@ -14,11 +14,11 @@ User.create(
   password_confirmation: 'foobar'
 )
 
-10.times do
+10.times do |e|
   Restaurant.create(
     name: Faker::Restaurant.unique.name,
     description: Faker::Restaurant.unique.type,
     location: Faker::Address.unique.street_address,
-    avatar_link: Faker::Avatar.image
+    avatar_link: "https://picsum.photos/200/300?random=#{e+1}"
   )
 end
