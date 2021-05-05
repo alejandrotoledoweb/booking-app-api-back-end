@@ -45,9 +45,7 @@ RSpec.describe 'Restaurants API', type: :request do
   end
 
   describe 'POST /restaurants' do
-    let(:valid_attributes) {
-      name: 'Sushi101', description: 'Best japansese food ever', location: 'Texas', avatar_link: 'link'
-    }
+    let(:valid_attributes)
 
     context 'when the request is valid' do
       before { post '/api/v1/restaurants', params: valid_attributes }
