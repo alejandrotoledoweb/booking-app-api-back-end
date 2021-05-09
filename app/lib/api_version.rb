@@ -1,4 +1,4 @@
-# Rubocop:disable Style/SafeNavigation
+# rubocop:disable Style/SafeNavigation
 class ApiVersion
   attr_reader :version, :default
 
@@ -20,5 +20,4 @@ class ApiVersion
     accept && accept.include?("application/vnd.restaurants.#{version}+json")
   end
 end
-# Rubocop:enable Style/SafeNavigation
-
+# rubocop:enable Style/SafeNavigation

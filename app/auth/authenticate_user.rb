@@ -1,4 +1,4 @@
-# Rubocop:disable Style/SafeNavigation
+# rubocop: disable Style/SafeNavigation
 class AuthenticateUser
   def initialize(email, password)
     @email = email
@@ -18,10 +18,8 @@ class AuthenticateUser
   def user
     user = User.find_by(email: email)
     return user if user && user.authenticate(password)
-
     # raise Authentication error if credentials are invalid
     raise(ExceptionHandler::AuthenticationError, Message.invalid_credentials)
   end
 end
-# Rubocop:enable Style/SafeNavigation
-
+# rubocop: enable Style/SafeNavigation
