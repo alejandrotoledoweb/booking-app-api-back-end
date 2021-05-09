@@ -1,14 +1,41 @@
 class ApplicationController < ActionController::API
   include Response
   include ExceptionHandler
+  rescue_from ActiveRecord::RecordNotDestroyed, with: :not_destroyed
 
-  before_action :authorize_request
-  attr_reader :current_user
+  def authenticate_admin!
+    return invalid_authentication if !payload || !AuthenticationTokenService.valid_payload(payload.first)
+
+    current_user!
+    non_admin_authentication unless @current_user.admin == true
+  end
+
+  def authenticate_request!
+    return invalid_authentication if !payload || !AuthenticationTokenService.valid_payload(payload.first)
+
+    current_user!
+    invalid_authentication unless @current_user
+  end
+
+  def current_user!
+    @current_user = User.find_by(id: payload[0]['user_id'])
+  end
+
+  def invalid_authentication
+    render json: { error: 'You need to login first' }, status: :unauthorized
+  end
+
+  def non_admin_authentication
+    render json: { error: 'Only admin can access this page' }, status: :unauthorized
+  end
 
   private
 
-  # Check for valid request token and return user
-  def authorize_request
-    @current_user = AuthorizeApiRequest.new(request.headers).call[:user]
+  def payload
+    auth_header = request.headers['Authorization']
+    token = auth_header.split(' ').last
+    AuthenticationTokenService.decode(token)
+  rescue StandardError
+    nil
   end
 end
