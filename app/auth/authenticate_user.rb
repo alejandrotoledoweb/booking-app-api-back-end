@@ -1,3 +1,4 @@
+# Rubocop:disable Style/SafeNavigation
 class AuthenticateUser
   def initialize(email, password)
     @email = email
@@ -22,3 +23,5 @@ class AuthenticateUser
     raise(ExceptionHandler::AuthenticationError, Message.invalid_credentials)
   end
 end
+# Rubocop:enable Style/SafeNavigation
+

@@ -1,3 +1,4 @@
+# Rubocop: disable Style/IfUnlessModifier
 class AuthorizeApiRequest
   def initialize(headers = {})
     @headers = headers
@@ -41,3 +42,4 @@ class AuthorizeApiRequest
     raise(ExceptionHandler::MissingToken, Message.missing_token)
   end
 end
+# Rubocop: enable Style/IfUnlessModifier

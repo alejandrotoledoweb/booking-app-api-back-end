@@ -28,7 +28,7 @@ gem 'faker'
 gem 'rack-cors'
 
 gem 'jwt'
-gem 'rubocop', '~>0.81.0'
+gem 'rubocop', '>= 1.0', '< 2.0'
 
 group :development, :test do
   gem 'dotenv-rails', require: 'dotenv/rails-now'
