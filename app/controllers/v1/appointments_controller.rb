@@ -30,6 +30,5 @@ module V1
     def appointment_params
       params.permit(:user_id, :restaurant_id, :date, :duration, :status)
     end
-
   end
 end

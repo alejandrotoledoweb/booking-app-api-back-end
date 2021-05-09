@@ -36,6 +36,5 @@ module V1
     def restaurant_params
       params.permit(:name, :description, :location, :avatar_link)
     end
-
   end
 end
