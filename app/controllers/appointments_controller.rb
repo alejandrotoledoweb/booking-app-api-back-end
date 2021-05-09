@@ -1,16 +1,32 @@
-class Api::V1::AppointmentsController < ApplicationController
+# app/controllers/items_controller.rb
+class AppointmentsController < ApplicationController
+  # GET /todos/:todo_id/items
   def index
-    @appointments = logged_in_user.appointments
-    return json_response(full_appointments(@appointments)) if @appointments
-
-    error_message
+    @appointments = current_user.appointments
+    json_response(@appointments)
   end
 
-  def create
-    @appointment = logged_in_user.appointments.create(appointment_params)
-    return json_response(@appointment, :created) if @appointment.valid?
+  # GET /todos/:todo_id/items/:id
+  def show
+    json_response(@appointment)
+  end
 
-    error_message
+  # POST /todos/:todo_id/items
+  def create
+    @appointment = current_user.restaurant.appointments.create!(appointment_params)
+    json_response(@appointment, :created) if @appointment.valid?
+  end
+
+  # PUT /todos/:todo_id/items/:id
+  def update
+    @appointment.update(appointment_params)
+    head :no_content
+  end
+
+  # DELETE /todos/:todo_id/items/:id
+  def destroy
+    @appointment.destroy
+    head :no_content
   end
 
   private
@@ -19,23 +35,4 @@ class Api::V1::AppointmentsController < ApplicationController
     params.permit(:user_id, :restaurant_id, :date, :duration, :status)
   end
 
-  def error_message
-    render json: { error: 'You have to login.', status: 'NOT_LOGGED_IN' }
-  end
-
-  def full_appointments(appointments)
-    full_appointments = []
-    appointments.each do |app|
-      full_appointments << {
-        date_created: app.created_at,
-        id: app.id,
-        date: app.date,
-        status: app.status,
-        duration: app.duration,
-        restaurant: app.restaurant[:name],
-        location: app.restaurant[:location]
-      }
-    end
-    full_appointments
-  end
 end
