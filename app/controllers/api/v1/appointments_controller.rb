@@ -1,41 +1,41 @@
 class Api::V1::AppointmentsController < ApplicationController
-  before_action :authenticate_request!
   def index
-    @appointments = @current_user.appointments
+    @appointments = logged_in_user.appointments
+    return json_response(full_appointments(@appointments)) if @appointments
 
-    render json: @appointments, status: :ok
+    error_message
   end
 
   def create
-    if !@current_user.appointments.find_by(restaurant_id: params[:restaurant_id])
-      @user_appointment = @current_user.appointments.create(appointments_params)
-      if @user_appointment.save
-        render json: User.find(@current_user.id).restaurants
-      else
-        render json: { message: @user_appointments.errors.full_messages }, status: :unprocessable_entity
-      end
-    else
-      render json: { message: 'appointment already taken' }, status: :unprocessable_entity
+    @appointment = logged_in_user.appointments.create(appointment_params)
+    return json_response(@appointment, :created) if @appointment.valid?
 
-    end
-  end
-
-  def destroy
-    @user_appointment = @current_user.appointments.find_by(restaurant_id: params[:restaurant_id])
-
-    if @user_appointment
-      @user_appointment.destroy
-      @appointments = @current_user.restaurants
-      render json: @appointments
-    else
-      render json: { message: "can't find an appointment with the id #{params[:restaurant_id]} " },
-             status: :unprocessable_entity
-    end
+    error_message
   end
 
   private
 
-  def appointments_params
-    params.permit(:restaurant_id, :user_id, :date, :duration, :status)
+  def appointment_params
+    params.permit(:user_id, :restaurant_id, :date, :duration, :status)
+  end
+
+  def error_message
+    render json: { error: 'You have to login.', status: 'NOT_LOGGED_IN' }
+  end
+
+  def full_appointments(appointments)
+    full_appointments = []
+    appointments.each do |app|
+      full_appointments << {
+        date_created: app.created_at,
+        id: app.id,
+        date: app.date,
+        status: app.status,
+        duration: app.duration,
+        restaurant: app.restaurant[:name],
+        location: app.restaurant[:location]
+      }
+    end
+    full_appointments
   end
 end

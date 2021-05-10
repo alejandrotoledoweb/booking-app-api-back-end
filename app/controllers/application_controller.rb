@@ -1,41 +1,42 @@
 class ApplicationController < ActionController::API
+  before_action :authorized
+
   include Response
   include ExceptionHandler
-  rescue_from ActiveRecord::RecordNotDestroyed, with: :not_destroyed
 
-  def authenticate_admin!
-    return invalid_authentication if !payload || !AuthenticationTokenService.valid_payload(payload.first)
-
-    current_user!
-    non_admin_authentication unless @current_user.admin == true
+  def encode_token(payload)
+    JWT.encode(payload, 's3cr3t')
   end
 
-  def authenticate_request!
-    return invalid_authentication if !payload || !AuthenticationTokenService.valid_payload(payload.first)
-
-    current_user!
-    invalid_authentication unless @current_user
+  def auth_header
+    request.headers['Authorization']
   end
 
-  def current_user!
-    @current_user = User.find_by(id: payload[0]['user_id'])
+  def decoded_token
+    return false unless auth_header
+
+    token = auth_header.split(' ')[1]
+    begin
+      JWT.decode(token, 's3cr3t', true, algorithm: 'HS256')
+    rescue JWT::DecodeError
+      false
+    end
   end
 
-  def invalid_authentication
-    render json: { error: 'You need to login first' }, status: :unauthorized
+  def logged_in_user
+    return false unless decoded_token
+
+    user_id = decoded_token[0]['user_id']
+    @user = User.select(:id, :name, :username, :email).find_by(id: user_id)
   end
 
-  def non_admin_authentication
-    render json: { error: 'Only admin can access this page' }, status: :unauthorized
+  def logged_in?
+    return true if logged_in_user
+
+    false
   end
 
-  private
-
-  def payload
-    auth_header = request.headers['Authorization']
-    token = auth_header.split(' ').last
-    AuthenticationTokenService.decode(token)
-  rescue StandardError
-    nil
+  def authorized
+    render json: { message: 'Please log in' }, status: :unauthorized unless logged_in?
   end
 end
