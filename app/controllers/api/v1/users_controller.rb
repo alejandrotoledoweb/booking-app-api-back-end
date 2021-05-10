@@ -1,6 +1,8 @@
 class Api::V1::UsersController < ApplicationController
   before_action :authorized, only: [:auto_login]
 
+  attr_accessor :user
+
   def create
     @user = User.create(user_params)
     if @user.valid?
