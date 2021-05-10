@@ -1,5 +1,5 @@
 class Api::V1::AuthenticationController < ApplicationController
-  skip_before_action :authorized, only: [:create]
+  skip_before_action :authorized, only: %i[create destroy]
   
   def create
     @user = User.find_by(username: params[:username])
