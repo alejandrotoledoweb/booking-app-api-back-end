@@ -1,6 +1,6 @@
 class Api::V1::AuthenticationController < ApplicationController
   skip_before_action :authorized, only: %i[create destroy]
-  
+
   def create
     @user = User.find_by(username: params[:username])
 
@@ -17,7 +17,6 @@ class Api::V1::AuthenticationController < ApplicationController
     reset_session
     render json: { logged_out: true }, status: :ok
   end
-  
 
   private
 
