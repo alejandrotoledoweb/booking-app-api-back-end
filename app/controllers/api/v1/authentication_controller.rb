@@ -15,7 +15,7 @@ class Api::V1::AuthenticationController < ApplicationController
 
   def destroy
     reset_session
-    render json: { logged_out: true }, status :ok
+    render json: { logged_out: true }, status: :ok
   end
   
 
