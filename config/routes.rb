@@ -5,10 +5,7 @@ Rails.application.routes.draw do
       resources :appointments, only: %i[create index]
       resources :restaurants
       resources :users, only: [:create]
-      post '/login', to: 'users#login'
-      get '/auto_login', to: 'users#auto_login'
-      delete '/logout', to: 'users#logout'
+      resources :authentication, only: [:create]
     end
   end
-  root to: 'static#index'
 end
