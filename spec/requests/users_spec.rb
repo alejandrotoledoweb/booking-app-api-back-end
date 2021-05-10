@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 require 'rails_helper'
 
 RSpec.describe 'Users API', type: :request do
@@ -87,4 +86,3 @@ RSpec.describe 'Users API', type: :request do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

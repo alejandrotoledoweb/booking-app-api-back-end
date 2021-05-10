@@ -1,34 +1,24 @@
-module Api
-  module V1
-    class AuthenticationController < ApplicationController
-      class AuthenticateError < StandardError; end
+class Api::V1::AuthenticationController < ApplicationController
+  skip_before_action :authorized, only: [:create]
+  def create
+    @user = User.find_by(username: params[:username])
 
-      rescue_from ActionController::ParameterMissing, with: :parameter_missing
-      rescue_from AuthenticateError, with: :handle_unauthenticated
-
-      def create
-        if user
-          raise AuthenticateError unless user.authenticate(params.require(:password))
-
-          render json: AuthenticateRepresenter.new(user).as_json, status: :created
-        else
-          render json: { error: 'No such user' }, status: :unauthorized
-        end
-      end
-
-      private
-
-      def user
-        @user ||= User.find_by(email: params.require(:email))
-      end
-
-      def parameter_missing(error)
-        render json: { error: error.message }, status: :unprocessable_entity
-      end
-
-      def handle_unauthenticated
-        render json: { error: 'Incorrect password ' }, status: :unauthorized
-      end
+    check_auth = @user.authenticate(params[:password])
+    if @user && check_auth
+      token = encode_token({ user_id: @user.id })
+      render json: { user: trim_user(@user), token: token, logged_in: true }, status: :ok
+    else
+      render json: { error: 'Invalid username or password', status: 'NOT_LOGGED_IN' }
     end
+  end
+
+  private
+
+  def user_params
+    params.permit(:name, :username, :email, :password, :password_confirmation)
+  end
+
+  def trim_user(user)
+    { id: user.id, name: user.name, username: user.username, email: user.email }
   end
 end

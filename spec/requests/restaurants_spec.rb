@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 require 'rails_helper'
 
 RSpec.describe 'Restaurants API', type: :request do
@@ -98,4 +97,3 @@ RSpec.describe 'Restaurants API', type: :request do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength
