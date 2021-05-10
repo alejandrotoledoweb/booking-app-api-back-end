@@ -1,28 +1,50 @@
 class Api::V1::UsersController < ApplicationController
+  before_action :authorized, only: [:auto_login]
+
+  attr_accessor :user
+
   def create
     @user = User.create(user_params)
-    if @user.save
-      render json: UserRepresenter.new(@user).as_json, status: :ok
+    if @user.valid?
+      token = encode_token({ user_id: @user.id })
+      render json: { user: trim_user(@user), token: token, created: true }, status: :created
     else
-      render json: { message: @user.errors.full_messages }, status: :unprocessable_entity
+      render json: { created: false, error_messages: @user.errors.full_messages }
     end
   end
 
-  def destroy
-    @user = User.find(params[:id])
+  def login
+    @user = User.find_by(username: params[:username])
 
-    if @user
-      @user.destroy
-      @users = User.all
-      render json: @users, status: :ok
+    check_auth = @user.authenticate(params[:password])
+    if @user && check_auth
+      token = encode_token({ user_id: @user.id })
+      render json: { user: trim_user(@user), token: token, logged_in: true }, status: :ok
     else
-      render json: { message: "can't find a user with the id #{params[:id]} " }, status: :unprocessable_entity
+      render json: { error: 'Invalid username or password', status: 'NOT_LOGGED_IN' }
     end
+  end
+
+  def auto_login
+    if logged_in_user
+      render json: { logged_in: true, user: logged_in_user }
+    else
+      render json: { message: 'No user is currently logged in' }
+    end
+  end
+
+  def logout
+    reset_session
+    render json: { logged_out: true }, status: :ok
   end
 
   private
 
   def user_params
-    params.permit(:name, :username, :email, :password)
+    params.permit(:name, :username, :email, :password, :password_confirmation)
+  end
+
+  def trim_user(user)
+    { id: user.id, name: user.name, username: user.username, email: user.email }
   end
 end
