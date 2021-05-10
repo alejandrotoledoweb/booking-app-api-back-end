@@ -5,7 +5,7 @@ Rails.application.routes.draw do
       resources :appointments, only: %i[create index]
       resources :restaurants
       resources :users, only: [:create]
-      resources :authentication, only: [:create]
+      resources :authentication, only: %i[create destroy]
     end
   end
 end

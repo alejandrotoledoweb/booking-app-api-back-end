@@ -13,6 +13,12 @@ class Api::V1::AuthenticationController < ApplicationController
     end
   end
 
+  def destroy
+    reset_session
+    render json: { logged_out: true }, status :ok
+  end
+  
+
   private
 
   def user_params
