@@ -9,7 +9,7 @@ class Api::V1::AuthenticationController < ApplicationController
       token = encode_token({ user_id: @user.id })
       render json: { user: trim_user(@user), token: token, logged_in: true }, status: :ok
     else
-      render json: { error: 'Invalid username or password', status: 'NOT_LOGGED_IN' }
+      render json: { error: 'Invalid username or password', status: 'NOT_LOGGED_IN' }, status: :not_acceptable
     end
   end
 
