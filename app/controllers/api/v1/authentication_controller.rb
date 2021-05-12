@@ -3,13 +3,14 @@ class Api::V1::AuthenticationController < ApplicationController
 
   def create
     @user = User.find_by(username: params[:username])
-
-    check_auth = @user.authenticate(params[:password])
-    if @user && check_auth
+    if @user
+      @check_auth = @user.authenticate(params[:password])
+    end
+    if @user && @check_auth
       token = encode_token({ user_id: @user.id })
       render json: { user: trim_user(@user), token: token, logged_in: true }, status: :ok
     else
-      render json: { error: 'Invalid username or password', status: 'NOT_LOGGED_IN' }, status: :not_acceptable
+      render json: { error: 'Invalid username or password', logged_in: false }, status: :not_found
     end
   end
 
