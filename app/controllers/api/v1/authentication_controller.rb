@@ -3,9 +3,7 @@ class Api::V1::AuthenticationController < ApplicationController
 
   def create
     @user = User.find_by(username: params[:username])
-    if @user
-      @check_auth = @user.authenticate(params[:password])
-    end
+    @check_auth = @user.authenticate(params[:password]) if @user
     if @user && @check_auth
       token = encode_token({ user_id: @user.id })
       render json: { user: trim_user(@user), token: token, logged_in: true }, status: :ok
