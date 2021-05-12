@@ -1,3 +1,6 @@
 class AppointmentsSerializer < ActiveModel::Serializer
-  attributes :date_created, :id, :date, :status, :duration, :rataurant, :location
+  belongs_to :user
+  belongs_to :restaurant
+
+  attributes :date_created, :id, :date, :status, :duration, :restaurant, :location
 end

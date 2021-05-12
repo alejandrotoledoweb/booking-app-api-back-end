@@ -14,6 +14,7 @@ gem 'puma', '~> 5.0'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'bcrypt', '~> 3.1.7'
 
 # Use Active Storage variant
@@ -29,7 +30,6 @@ gem 'rack-cors'
 
 gem 'jwt'
 gem 'rubocop', '~>0.81.0'
-gem 'active_model_serializers', '~> 0.10.0'
 
 group :development, :test do
   gem 'dotenv-rails', require: 'dotenv/rails-now'
