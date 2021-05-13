@@ -1,9 +1,6 @@
 class Api::V1::AppointmentsController < ApplicationController
   def index
     @appointments = logged_in_user.appointments
-    return json_response(full_appointments(@appointments)) if @appointments
-
-    error_message
   end
 
   def create
@@ -21,21 +18,5 @@ class Api::V1::AppointmentsController < ApplicationController
 
   def error_message
     render json: { error: 'You have to login.', status: 'NOT_LOGGED_IN' }
-  end
-
-  def full_appointments(appointments)
-    full_appointments = []
-    appointments.each do |app|
-      full_appointments << {
-        date_created: app.created_at,
-        id: app.id,
-        date: app.date,
-        status: app.status,
-        duration: app.duration,
-        restaurant: app.restaurant[:name],
-        location: app.restaurant[:location]
-      }
-    end
-    full_appointments
   end
 end
