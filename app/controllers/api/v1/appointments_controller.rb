@@ -1,9 +1,6 @@
 class Api::V1::AppointmentsController < ApplicationController
   def index
     @appointments = logged_in_user.appointments
-    return json_response(full_appointments(@appointments)) if @appointments
-
-    error_message
   end
 
   def create
