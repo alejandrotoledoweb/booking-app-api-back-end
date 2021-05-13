@@ -1,4 +1,4 @@
-json.appointments @appointments do |app|
+json.array! @appointments do |app|
   json.date_create app.created_at
   json.id app.id
   json.date app.date
