@@ -1,5 +1,5 @@
 json.array! @appointments do |app|
-  json.date_create app.created_at
+  json.date_created app.created_at
   json.id app.id
   json.date app.date
   json.status app.status
