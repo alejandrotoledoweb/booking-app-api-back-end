@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :appointments, only: %i[create index]
       resources :restaurants
-      resources :users, only: [:create]
+      resources :users, only: %i[create]
       resources :authentication, only: %i[create destroy]
     end
   end
