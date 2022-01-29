@@ -16,9 +16,9 @@ User.create(
 
 10.times do |e|
   Restaurant.create(
-    name: Faker::Restaurant.unique.name,
-    description: Faker::Restaurant.unique.type,
-    location: Faker::Address.unique.street_address,
+    name: Faker::Restaurant.unique.name, # Clears used values for Faker::Restaurant
+    description: Faker::Restaurant.unique.type, 
+    location: Faker::Address.unique.street_address, # Clears used values for Faker::Address
     avatar_link: "https://picsum.photos/200/300?random=#{e+1}"
   )
 end

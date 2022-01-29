@@ -13,7 +13,7 @@ RSpec.describe 'Restaurants API', type: :request do
     end
 
     it 'returns status code 200' do
-      expect(response).to have_http_status(200)
+      expect(response.status).to eq(200)
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe 'Restaurants API', type: :request do
       end
 
       it 'returns status code 200' do
-        expect(response).to have_http_status(200)
+        expect(response.status).to eq(200)
       end
     end
 
@@ -45,7 +45,6 @@ RSpec.describe 'Restaurants API', type: :request do
   end
 
   describe 'POST /restaurants' do
-    let(:valid_attributes)
 
     context 'when the request is valid' do
       before { post '/api/v1/restaurants', params: valid_attributes }
