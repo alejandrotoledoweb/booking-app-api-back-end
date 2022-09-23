@@ -1,15 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe 'Restaurants API', type: :request do
-  let!(:restaurants) { create_list(:restaurant, 10) }
-  let(:restaurant_id) { restaurants.first.id }
+  # let!(:restaurants) { create_list(:restaurant, 10) }
+  let!(:restaurant) { create(:restaurant) }
+  let(:restaurant_id) { restaurant.id }
 
   describe 'GET /restaurants' do
     before { get '/api/v1/restaurants' }
 
     it 'returns restaurants' do
       expect(json).not_to be_empty
-      expect(json.size).to eq(10)
+      expect(json.size).to eq(1)
     end
 
     it 'returns status code 200' do
@@ -39,18 +40,18 @@ RSpec.describe 'Restaurants API', type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find Engineer/)
+        expect(response.body).to match(/Couldn't find Restaurant with 'id'=100/)
       end
     end
   end
 
   describe 'POST /restaurants' do
-
     context 'when the request is valid' do
+      let(:valid_attributes) { { 'name' => 'Alex Restaurant', 'description' => 'Pizza all day long', 'location' => 'near the valley of Quito', 'avatar_link' => 'avatar Link test' } }
       before { post '/api/v1/restaurants', params: valid_attributes }
 
       it 'creates an restaurant' do
-        expect(json['name']).to eq('Sushi101')
+        expect(json['name']).to eq('Alex Restaurant')
       end
 
       it 'returns status code 201' do
