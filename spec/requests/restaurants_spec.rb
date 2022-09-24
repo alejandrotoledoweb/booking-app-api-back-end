@@ -47,7 +47,10 @@ RSpec.describe 'Restaurants API', type: :request do
 
   describe 'POST /restaurants' do
     context 'when the request is valid' do
-      let(:valid_attributes) { { 'name' => 'Alex Restaurant', 'description' => 'Pizza all day long', 'location' => 'near the valley of Quito', 'avatar_link' => 'avatar Link test' } }
+      let(:valid_attributes) do
+        { name: 'Alex Restaurant', description: 'Pizza all day long', location:
+          'near the valley of Quito', avatar_link: 'avatar Link test' }
+      end
       before { post '/api/v1/restaurants', params: valid_attributes }
 
       it 'creates an restaurant' do
